@@ -1,0 +1,13 @@
+digraph "C:/Users/Tristan/Documents/Visual Studio 2013/Projects/Pumgrana/Pumgrana/obj/x86/Debug" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_840657233547a1fbfc72be35b6e26ca5 {
+    graph [ bgcolor="#ddddee", pencolor="black", label="x86" fontname="Helvetica", fontsize="10", URL="dir_840657233547a1fbfc72be35b6e26ca5.html"]
+  subgraph clusterdir_bdc4de7e6ad56076099a2962b6291189 {
+    graph [ bgcolor="#eeeeff", pencolor="black", label="" URL="dir_bdc4de7e6ad56076099a2962b6291189.html"];
+    dir_bdc4de7e6ad56076099a2962b6291189 [shape=plaintext label="Debug"];
+    dir_4203f52adf36232f9a7351be07fbad89 [shape=box label="Pages XAML" color="black" fillcolor="white" style="filled" URL="dir_4203f52adf36232f9a7351be07fbad89.html"];
+  }
+  }
+}
