@@ -1,9 +1,0 @@
-digraph "C:/Users/Tristan/Documents/Visual Studio 2013/Projects/Pumgrana/Pumgrana/obj/x86/Debug/Pages XAML" {
-  compound=true
-  node [ fontsize="10", fontname="Helvetica"];
-  edge [ labelfontsize="10", labelfontname="Helvetica"];
-  subgraph clusterdir_bdc4de7e6ad56076099a2962b6291189 {
-    graph [ bgcolor="#ddddee", pencolor="black", label="Debug" fontname="Helvetica", fontsize="10", URL="dir_bdc4de7e6ad56076099a2962b6291189.html"]
-  dir_4203f52adf36232f9a7351be07fbad89 [shape=box, label="Pages XAML", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_4203f52adf36232f9a7351be07fbad89.html"];
-  }
-}
