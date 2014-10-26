@@ -267,7 +267,7 @@ namespace Pumgrana
         {
             WebClient wc = GetFreeWebClientDownLoad();
             RequestInfo info = new RequestInfo(typeof(FullLinkList), TypeOfRequest.GET_LINK_DETAIL_FROM_URI);
-            string url = baseurl + "link/from_uri/" + EncodeUrl(uri);
+            string url = baseurl + "link/detail/" + EncodeUrl(uri);
             wc.DownloadStringAsync(new Uri(url), info);
         }
 
@@ -284,84 +284,6 @@ namespace Pumgrana
             RequestInfo info = new RequestInfo(typeof(ListTag), TypeOfRequest.GET_TAGS_BY_TYPE);
             string url = baseurl + "tag/list_by_type/CONTENT";
             wc.DownloadStringAsync(new Uri(url), info);
-        }
-        public void PostTag(List<string> tags, string id = "")
-        {
-            WebClient wc = GetFreeWebClientUpload();
-            string url = baseurl + "tag/insert";
-
-            WriteTag tag = new WriteTag();
-            tag.tags_subject = tags;
-            tag.type_name = "CONTENT";
-
-            RequestInfo info = new RequestInfo(typeof(WriteTagAnswer), TypeOfRequest.INSERT_TAGS);
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(tag);
-            wc.UploadStringAsync(new Uri(url), "POST", json, info);
-        }
-        public void PostTag(string tag)
-        {
-            List<string> list = new List<string>();
-            list.Add(tag);
-            PostTag(list);
-        }
-        public void DeleteTag(List<string> uri)
-        {
-            WebClient wc = GetFreeWebClientUpload();
-            string url = baseurl + "tag/delete";
-
-            WriteDeleteTag tag = new WriteDeleteTag();
-            tag.tags_uri = uri;
-
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(tag);
-            RequestInfo info = new RequestInfo(typeof(RequestObject), TypeOfRequest.DELETE_TAGS);
-            wc.UploadStringAsync(new Uri(url), "POST", json, info);
-        }
-        public void DeleteTag(string subject)
-        {
-            List<string> list = new List<string>();
-            list.Add(subject);
-            DeleteTag(list);
-        }
-
-        public void     UpdateContent(Content c, List<string> Tags)
-        {
-            WebClient wc = GetFreeWebClientUpload();
-            WriteUpdateContent uc = new WriteUpdateContent(c);
-            uc.tags_uri = Tags;
-            uc.content_uri = EncodeUrl(uc.content_uri);
-            string url = baseurl + "content/update";
-
-            RequestInfo info = new RequestInfo(typeof(RequestObject), TypeOfRequest.UPDATE_CONTENT);
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(uc);
-            wc.UploadStringAsync(new Uri(url), "POST", json, info);
-        }
-        public void CreateContent(Content c, List<string> tags)
-        {
-            WebClient wc = GetFreeWebClientUpload();
-            WriteCreateContent cc = new WriteCreateContent(c, tags);
-            string url = baseurl + "content/insert";
-            RequestInfo info = new RequestInfo(typeof(CreateContent), TypeOfRequest.INSERT_CONTENT);
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(cc);
-            wc.UploadStringAsync(new Uri(url), "POST", json, info);
-        }
-        public void DeleteContent(string id)
-        {
-            List<string> ids = new List<string>();
-            ids.Add(id);
-            DeleteContent(ids);
-        }
-        public void DeleteContent(List<string> ids)
-        {
-            WebClient wc = GetFreeWebClientUpload();
-            PutDeleteContent c = new PutDeleteContent();
-            c.contents_uri = ids;
-            for (int i = 0; i < c.contents_uri.Count; i++)
-                c.contents_uri[i] = EncodeUrl(c.contents_uri[i]);
-            string url = baseurl + "content/delete";
-
-            RequestInfo info = new RequestInfo(typeof(RequestObject), TypeOfRequest.DELETE_CONTENT);
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(c);
-            wc.UploadStringAsync(new Uri(url), "POST", json, info);
         }
 
         public void AbortConnection()

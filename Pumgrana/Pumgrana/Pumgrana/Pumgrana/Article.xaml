@@ -1,5 +1,4 @@
 ﻿<phone:PhoneApplicationPage
-    x:Class="Pumgrana.Article"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
@@ -7,26 +6,33 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}" Orientation="Portrait"
+    xmlns:Controls="clr-namespace:MyToolkit.Controls;assembly=MyToolkit.Extended"
+    x:Class="Pumgrana.Article"
+    Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True">
 	<phone:PhoneApplicationPage.Resources>
 		<DataTemplate x:Key="LinkedArticlesTemplate">
 			<Grid Width="300" Height="40">
-                <HyperlinkButton Content="{Binding content_title}" Height="40" Foreground="#636363"/>
+				<HyperlinkButton Content="{Binding content_title}" Height="40" Foreground="#636363"/>
 			</Grid>
 		</DataTemplate>
         <DataTemplate x:Key="TagsTemplate">
-            <Grid Width="200" Height="27">
-                <TextBlock TextWrapping="Wrap" Text="{Binding subject}" Width="200" Height="27"/>
-            </Grid>
+        	<Grid Width="200" Height="27">
+        		<TextBlock TextWrapping="Wrap" Text="{Binding subject}" Width="200" Height="27"/>
+        	</Grid>
         </DataTemplate>
-        <DataTemplate x:Key="PanoramaTitleTemplate">
-            
-        </DataTemplate>
+        <DataTemplate x:Key="PanoramaTitleTemplate"/>
     </phone:PhoneApplicationPage.Resources>
+	<phone:PhoneApplicationPage.FontFamily>
+		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+	</phone:PhoneApplicationPage.FontFamily>
+	<phone:PhoneApplicationPage.FontSize>
+		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
+	</phone:PhoneApplicationPage.FontSize>
+	<phone:PhoneApplicationPage.Foreground>
+		<StaticResource ResourceKey="PhoneForegroundBrush"/>
+	</phone:PhoneApplicationPage.Foreground>
 	<phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh.png" Text="refresh" IsEnabled="False" Click="ApplicationBarIconButton_Click_1"/>
@@ -34,43 +40,44 @@
 	</phone:PhoneApplicationPage.ApplicationBar>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+	<Grid x:Name="LayoutRoot" Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 
-        <!--TitlePanel contains the name of the application and page title-->
+		<!--TitlePanel contains the name of the application and page title-->
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Background="#FFF9F9F9">
-            <ProgressBar x:Name="ProgressLoadContent" Height="28" Margin="10,0,0,0" VerticalAlignment="Top" Width="446" IsIndeterminate="True" Background="#194D1DB4" Foreground="#FF003AFF"/>
-            <phone:Panorama x:Name="ArticlePanorama" HorizontalAlignment="Left" Height="696" VerticalAlignment="Top" Width="480">
-                <phone:Panorama.Title>
-                    <TextBlock x:Name="TitleOfArticle" Text="{Binding title}" Foreground="#fa4b4e" FontFamily="PT Sans" />
-                </phone:Panorama.Title>
-                <phone:PanoramaItem x:Name="ContentPanoramaItem" CacheMode="{x:Null}">
-                    <Grid Margin="10,0">
-                        <phone:WebBrowser x:Name="ArticleWebView" IsScriptEnabled="True" Foreground="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LoadCompleted="ArticleWebView_LoadCompleted"/>
-                    </Grid>
-                </phone:PanoramaItem>
-                <phone:PanoramaItem x:Name="TagsPanoramaItem" CacheMode="{x:Null}">
-                    <phone:PanoramaItem.Header>
-                        <TextBlock Text="Tags" Foreground="#fa4b4e" FontFamily="PT Sans" />
-                    </phone:PanoramaItem.Header>
-                    <Grid>
-                        <phone:LongListSelector ItemsSource="{Binding tags}" ItemTemplate="{StaticResource TagsTemplate}" Foreground="#FF636363"/>
-                    </Grid>
-                </phone:PanoramaItem>
-                <phone:PanoramaItem x:Name="LinkedPanoramaItem">
-                    <phone:PanoramaItem.Header>
-                        <TextBlock Text="Linked Articles" Foreground="#fa4b4e" FontFamily="PT Sans"/>
-                    </phone:PanoramaItem.Header>
-                    <Grid Height="634" Width="428">
-                        <phone:LongListSelector Height="634" Width="428" ItemsSource="{Binding links}" ItemTemplate="{StaticResource LinkedArticlesTemplate}" SelectionChanged="LongListSelector_SelectionChanged" Foreground="#FF636363"/>
-                    </Grid>
-                </phone:PanoramaItem>
-            </phone:Panorama>
-        </Grid>
-    </Grid>
+		<Grid x:Name="ContentPanel" Grid.Row="1" Background="#FFF9F9F9">
+			<ProgressBar x:Name="ProgressLoadContent" Height="28" Margin="10,0,0,0" VerticalAlignment="Top" Width="446" IsIndeterminate="True" Background="#194D1DB4" Foreground="#FF003AFF"/>
+			<phone:Panorama x:Name="ArticlePanorama" HorizontalAlignment="Left" Height="696" VerticalAlignment="Top" Width="480">
+				<phone:Panorama.Title>
+					<TextBlock x:Name="TitleOfArticle" Text="{Binding title}" Foreground="#fa4b4e" FontFamily="PT Sans" />
+				</phone:Panorama.Title>
+				<phone:PanoramaItem x:Name="ContentPanoramaItem" CacheMode="{x:Null}">
+					<Grid Margin="10,0">
+						<phone:WebBrowser x:Name="ArticleWebView" IsScriptEnabled="True" Foreground="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LoadCompleted="ArticleWebView_LoadCompleted" Margin="-10,0,10,0"/>
+						<Controls:YouTubeButton x:Name="YoutubeButton" Height="473" Margin="-10,0,0,0" Width="410" Click="YouTubeButton_Click" Foreground="White" Background="White" Visibility="Collapsed"/>
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="TagsPanoramaItem" CacheMode="{x:Null}">
+					<phone:PanoramaItem.Header>
+						<TextBlock Text="Tags" Foreground="#fa4b4e" FontFamily="PT Sans" />
+					</phone:PanoramaItem.Header>
+					<Grid>
+						<phone:LongListSelector ItemsSource="{Binding tags}" ItemTemplate="{StaticResource TagsTemplate}" Foreground="#FF636363"/>
+					</Grid>
+				</phone:PanoramaItem>
+				<phone:PanoramaItem x:Name="LinkedPanoramaItem">
+					<phone:PanoramaItem.Header>
+						<TextBlock Text="Linked Articles" Foreground="#fa4b4e" FontFamily="PT Sans"/>
+					</phone:PanoramaItem.Header>
+					<Grid Height="634" Width="428">
+						<phone:LongListSelector Height="634" Width="428" ItemsSource="{Binding links}" ItemTemplate="{StaticResource LinkedArticlesTemplate}" SelectionChanged="LongListSelector_SelectionChanged" Foreground="#FF636363"/>
+					</Grid>
+				</phone:PanoramaItem>
+			</phone:Panorama>
+		</Grid>
+	</Grid>
 </phone:PhoneApplicationPage>

@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Collections.ObjectModel;
 using System.Threading;
-using System.Windows.Documents;
+using MyToolkit.Multimedia;
+using System.Text.RegularExpressions;
 
 namespace Pumgrana
 {
@@ -22,14 +19,27 @@ namespace Pumgrana
         List<int> IdArticles = new List<int>();
         string id = "";
         int IndexArticle = 0;
+        string IdYoutube { get; set; }
         public Article()
         {
             InitializeComponent();
-            wc.Error += wc_Error;
+        }
+
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            if (YouTube.CancelPlay())
+                e.Cancel = true;
+            base.OnBackKeyPress(e);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            wc.Error += wc_Error;
+
+            YouTube.CancelPlay(); // used to reenable page
+            SystemTray.ProgressIndicator = new ProgressIndicator();
+            SystemTray.ProgressIndicator.IsVisible = false;
+
             string index = "";
             NavigationContext.QueryString.TryGetValue("id", out id);
             NavigationContext.QueryString.TryGetValue("Index", out index);
@@ -48,7 +58,6 @@ namespace Pumgrana
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             wc.Error -= wc_Error;
-            //wc.AbortConnection();
             base.OnNavigatedFrom(e);
         }
 
@@ -84,6 +93,15 @@ namespace Pumgrana
 
             string html = "<html><head><meta charset=\"utf-8\"/></head><body>" + res.body + "</body></html>";
             this.ArticleWebView.NavigateToString(html);
+            if (IsYoutubeContent(html) == true)
+                this.YoutubeButton.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private bool IsYoutubeContent(string html)
+        {
+            Match m = Regex.Match(html, "(https?://)?(www\\.)?(youtu\\.be/|youtube\\.com/)(.+/)?((watch(\\?v=|.+&v=))?(v=)?)([A-Za-z0-9_-]+)(&.+)?\"");
+            IdYoutube = m.Groups[9].Value;
+            return (m.Success);
         }
 
         private void GetTagsFromId()
@@ -155,6 +173,22 @@ namespace Pumgrana
             wc.GetLinkDetailFromUri -= wc_GetLinkDetailFromUri;
             FullLinkList data = output as FullLinkList;
             NavigationService.Navigate(new Uri("/Article.xaml?id=" + data.links[0].target_uri, UriKind.Relative));
+        }
+
+        private async void YouTubeButton_Click(object sender, RoutedEventArgs e)
+        {
+            SystemTray.ProgressIndicator.IsVisible = true;
+            try
+            {
+                await YouTube.PlayWithPageDeactivationAsync(
+                    this.IdYoutube, true, YouTubeQuality.Quality1080P);
+            }
+            catch (Exception ex)
+            {
+                SystemTray.ProgressIndicator.IsVisible = false;
+                MessageBox.Show(ex.Message);
+            }
+
         }
     }
 }

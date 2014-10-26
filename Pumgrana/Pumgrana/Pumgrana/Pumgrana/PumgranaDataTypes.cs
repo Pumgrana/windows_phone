@@ -184,7 +184,7 @@ namespace Pumgrana
         public string link_uri { get; set; }
         public string origin_uri { get; set; }
         public string target_uri { get; set; }
-        public ListTag tags { get; set; }
+        public List<Tag> tags { get; set; }
 
         public FullLink()
         {
@@ -195,6 +195,11 @@ namespace Pumgrana
     public class FullLinkList : RequestObject
     {
         public List<FullLink> links { get; set; }
+
+        public FullLinkList()
+        {
+            links = new List<FullLink>();
+        }
     }
 
     public class ListLink : RequestObject
@@ -204,108 +209,6 @@ namespace Pumgrana
         public ListLink()
         {
             links = new List<Link>();
-        }
-    }
-
-    public class ReturnWriteTag
-    {
-        public int status { get; set; }
-        public List<string> tags_uri { get; set; }
-
-        ReturnWriteTag()
-        {
-            tags_uri = new List<string>();
-        }
-    }
-
-    public class WriteTag
-    {
-        public string type_name { get; set; }
-        public List<string> tags_subject { get; set; }
-        public WriteTag()
-        {
-            tags_subject = new List<string>();
-        }
-    }
-
-    public class Tags_Id_Tag
-    {
-        public string _id { get; set; }
-    }
-
-    public class WriteTagAnswer : RequestObject
-    {
-        public List<Tags_Id_Tag> tags_uri { get; set; }
-        public WriteTagAnswer()
-        {
-            tags_uri = new List<Tags_Id_Tag>();
-        }
-    }
-
-    public class WriteDeleteTag
-    {
-        public List<string> tags_uri { get; set; }
-        public WriteDeleteTag()
-        {
-            tags_uri = new List<string>();
-        }
-    }
-    public class DeleteTagAnswer : RequestObject
-    {
-        public DeleteTagAnswer()
-        {
-
-        }
-    }
-    public class WriteUpdateContent : Content
-    {
-        public List<string> tags_uri { get; set; }
-        public string content_uri { get; set; }
-        public WriteUpdateContent()
-        {
-            tags_uri = new List<string>();
-        }
-        public WriteUpdateContent(Content c)
-        {
-            this.content_uri = c.uri;
-            this.summary = c.summary;
-            this.body = c.body;
-            this.title = c.title;
-        }
-    }
-    public class CreateContent : RequestObject
-    {
-        public List<string> content_uri { get; set; }
-
-        public CreateContent()
-        {
-            content_uri = new List<string>();
-        }
-    }
-    public class WriteCreateContent
-    {
-        public string title { get; set; }
-        public string summary { get; set; }
-        public string body { get; set; }
-        public List<string> tags_uri { get; set; }
-        public WriteCreateContent()
-        {
-            tags_uri = new List<string>();
-        }
-        public WriteCreateContent(Content c, List<string> tags)
-        {
-            this.title = c.title;
-            this.summary = c.summary;
-            this.body = c.body;
-            this.tags_uri = tags;
-        }
-    }
-    public class PutDeleteContent
-    {
-        public List<string> contents_uri { get; set; }
-        public PutDeleteContent()
-        {
-            contents_uri = new List<string>();
         }
     }
 }

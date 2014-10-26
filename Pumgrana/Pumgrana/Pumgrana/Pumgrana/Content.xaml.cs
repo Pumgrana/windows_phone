@@ -22,47 +22,20 @@ namespace Pumgrana
     {
         DT_ShowContent DT = new DT_ShowContent();
         PumgranaWebClient wc = new PumgranaWebClient();
-
-        private List<ApplicationBarIconButton> ButtonsApplyTag { get; set; }
-
-        private ObservableCollection<TagToApply> TagApplied { get; set; }
+        ApplicationBarIconButton RefreshContentButton { get; set; }
 
         private bool IsRefreshing { get; set; }
 
         public ShowContent()
         {
             InitializeComponent();
-            ButtonsApplyTag = new List<ApplicationBarIconButton>();
-            TagApplied = new ObservableCollection<TagToApply>();
-
-            ApplicationBarIconButton ApplyTag = new ApplicationBarIconButton();
-            ApplyTag.IconUri = new Uri("/Assets/AppBar/check.png", UriKind.Relative);
-            ApplyTag.IsEnabled = true;
-            ApplyTag.Text = "Apply";
-
-            ApplicationBarIconButton CancelTag = new ApplicationBarIconButton();
-            CancelTag.IconUri = new Uri("/Assets/AppBar/back.png", UriKind.Relative);
-            CancelTag.IsEnabled = true;
-            CancelTag.Text = "Cancel";
-
-            ButtonsApplyTag.Add(CancelTag);
-            ButtonsApplyTag.Add(ApplyTag);
-
-            var pullDetector = new WP8PullDetector();
-            pullDetector.Bind(this.ListContent);
-            pullDetector.Compression += pullDetector_Compression;
-
-            wc.Error += wc_Error;
-        }
-
-        void pullDetector_Compression(object sender, CompressionEventArgs e)
-        {
-            if (e.Type == CompressionType.Top && this.IsRefreshing == false)
-                RefreshContents();
+            RefreshContentButton = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
+            wc.Error += wc_Error;
+
             DT_ShowContent dt_local = IsolatedStorageOperations.Load<DT_ShowContent>("Content.xml");
             if (dt_local.listContent.Count > 0)
             {
@@ -80,9 +53,7 @@ namespace Pumgrana
             this.DT.listContent.Clear();
             this.DT.listTag.Clear();
 
-            //this.wc.AbortConnection();
-
-            (ApplicationBar.Buttons[0] as ApplicationBarIconButton).IsEnabled = false;
+            this.RefreshContentButton.IsEnabled = false;
             base.OnNavigatedFrom(e);
         }
 
@@ -92,6 +63,7 @@ namespace Pumgrana
             MessageBox.Show(e.Message);
 
             this.ProgressLoadContent.Visibility = System.Windows.Visibility.Collapsed;
+            this.RefreshContentButton.IsEnabled = true;
         }
 
         private void GetAllTags()
@@ -114,8 +86,6 @@ namespace Pumgrana
                 ToAdd.title = t.subject;
                 this.DT.listTag.Add(ToAdd);
             }
-            //this.ProgressLoadContent.Visibility = System.Windows.Visibility.Collapsed;
-            //this.ListSelectedTags.DataContext = this.DT;
         }
 
         private void GetContentFromServer(List<string> tags_uri = null)
@@ -139,8 +109,7 @@ namespace Pumgrana
 
             ThreadPool.QueueUserWorkItem(new WaitCallback(SaveCurrentPage), this.DT);
             this.ProgressLoadContent.Visibility = System.Windows.Visibility.Collapsed;
-            ApplicationBarIconButton refreshButton = ApplicationBar.Buttons[0] as ApplicationBarIconButton;
-            refreshButton.IsEnabled = true;
+            this.RefreshContentButton.IsEnabled = true;
             this.IsRefreshing = false;
         }
 
@@ -155,7 +124,6 @@ namespace Pumgrana
             Content c = selector.SelectedItem as Content;
             string id = c.uri;
             int index = selector.ItemsSource.IndexOf(selector.SelectedItem);
-            System.Diagnostics.Debug.WriteLine("Index : " + index.ToString());
             this.NavigationService.Navigate(new Uri("/Article.xaml?id=" + id + "&Index=" + index.ToString(), UriKind.Relative));
         }
 
@@ -172,65 +140,19 @@ namespace Pumgrana
         private void RefreshContents()
         {
             this.ProgressLoadContent.Visibility = System.Windows.Visibility.Visible;
-            (ApplicationBar.Buttons[0] as ApplicationBarIconButton).IsEnabled = false;
+            this.RefreshContentButton.IsEnabled = false;
             GetContentFromServer(getSelectedTags());
-        }
-
-        private void CancelChangesButton_Click(object sender, EventArgs e)
-        {
-            if (ContentPivot.SelectedIndex == 1) // Tag window
-            {
-                ContentPivot.SelectedIndex = 0;
-                this.DT.listTag = TagApplied;
-            }
-        }
-
-        void ApplyChangesButton_Click(object sender, EventArgs e)
-        {
-            List<string> tags_uri = new List<string>();
-            foreach (TagToApply tag in  this.DT.listTag.Where(tmp => tmp.IsChecked == true))
-            {
-                tags_uri.Add(tag.Id);
-            }
-            ProgressLoadContent.Visibility = System.Windows.Visibility.Visible;
-            wc.GetContents += wc_GetContents;
-            wc.getContents(tags_uri);
-            ContentPivot.SelectedIndex = 0;
-        }
-
-        private void ChangeApplicationBarIconButtons(List<ApplicationBarIconButton> list)
-        {
-            ApplicationBar.Buttons.Clear();
-            foreach (ApplicationBarIconButton b in list)
-            {
-                ApplicationBar.Buttons.Add(b);
-            }
-        }
-
-        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            Pivot p = sender as Pivot;
-            if (p.SelectedIndex == 1) //Tag window
-            {
-                ChangeApplicationBarIconButtons(ButtonsApplyTag);
-                TagApplied = this.DT.listTag;
-            }
-            else
-            {
-                //ChangeApplicationBarIconButtons(new List<ApplicationBarIconButton>()); // Clear the icon bar buttons
-            }
         }
 
         private void ClearCache_Event(object sender, System.EventArgs e)
         {
             IsolatedStorageOperations.ClearCache();
             this.DT.NbOfContents = 0;
+            (this.ApplicationBar.MenuItems[0] as ApplicationBarMenuItem).IsEnabled = false;
         }
 
         private void RefreshContent_Click(object sender, EventArgs e)
         {
-            ApplicationBarIconButton button = sender as ApplicationBarIconButton;
-            button.IsEnabled = false;
             RefreshContents();
         }
     }
