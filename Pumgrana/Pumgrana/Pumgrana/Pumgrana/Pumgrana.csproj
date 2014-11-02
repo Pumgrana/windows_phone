@@ -243,6 +243,10 @@
     </Reference>
     <Reference Include="System.Windows.Interactivity" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="youtubeIcon.jpg" />
+    <Resource Include="youtubeIcon.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

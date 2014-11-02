@@ -91,10 +91,18 @@ namespace Pumgrana
             this.DT.content = res;
             this.TitleOfArticle.DataContext = this.DT.content;
 
-            string html = "<html><head><meta charset=\"utf-8\"/></head><body>" + res.body + "</body></html>";
-            this.ArticleWebView.NavigateToString(html);
-            if (IsYoutubeContent(html) == true)
+            string html = "<html><head><meta charset=\"utf-8\"/></head><body>";
+
+            if (IsYoutubeContent(res.body) == true)
+            {
                 this.YoutubeButton.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                html += res.body;
+            }
+            html += "</body></html>";
+            this.ArticleWebView.NavigateToString(html);
         }
 
         private bool IsYoutubeContent(string html)
@@ -189,6 +197,11 @@ namespace Pumgrana
                 MessageBox.Show(ex.Message);
             }
 
+        }
+
+        private void ApplicationBarIconButton_Click(object sender, System.EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/Content.xaml", UriKind.Relative));
         }
     }
 }

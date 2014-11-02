@@ -23,6 +23,59 @@
         	</Grid>
         </DataTemplate>
         <DataTemplate x:Key="PanoramaTitleTemplate"/>
+        <Style x:Key="YoutubeButtonStyle" TargetType="Button">
+        	<Setter Property="Background" Value="Transparent"/>
+        	<Setter Property="BorderBrush" Value="{StaticResource PhoneForegroundBrush}"/>
+        	<Setter Property="Foreground" Value="{StaticResource PhoneForegroundBrush}"/>
+        	<Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
+        	<Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilySemiBold}"/>
+        	<Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMedium}"/>
+        	<Setter Property="Padding" Value="10,5,10,6"/>
+        	<Setter Property="Template">
+        		<Setter.Value>
+        			<ControlTemplate TargetType="Button">
+        				<Grid Background="Transparent">
+        					<VisualStateManager.VisualStateGroups>
+        						<VisualStateGroup x:Name="CommonStates">
+        							<VisualState x:Name="Normal"/>
+        							<VisualState x:Name="MouseOver"/>
+        							<VisualState x:Name="Pressed">
+        								<Storyboard>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneButtonBasePressedForegroundBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0">
+        											<DiscreteObjectKeyFrame.Value>
+        												<SolidColorBrush Color="Red"/>
+        											</DiscreteObjectKeyFrame.Value>
+        										</DiscreteObjectKeyFrame>
+        									</ObjectAnimationUsingKeyFrames>
+        								</Storyboard>
+        							</VisualState>
+        							<VisualState x:Name="Disabled">
+        								<Storyboard>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentContainer">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PhoneDisabledBrush}"/>
+        									</ObjectAnimationUsingKeyFrames>
+        									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="ButtonBackground">
+        										<DiscreteObjectKeyFrame KeyTime="0" Value="Transparent"/>
+        									</ObjectAnimationUsingKeyFrames>
+        								</Storyboard>
+        							</VisualState>
+        						</VisualStateGroup>
+        					</VisualStateManager.VisualStateGroups>
+        					<Border x:Name="ButtonBackground" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" CornerRadius="0" Margin="{StaticResource PhoneTouchTargetOverhang}">
+        						<ContentControl x:Name="ContentContainer" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        					</Border>
+        				</Grid>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
     </phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.FontFamily>
 		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
@@ -36,6 +89,7 @@
 	<phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/refresh.png" Text="refresh" IsEnabled="False" Click="ApplicationBarIconButton_Click_1"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/back.png" Text="Home" Click="ApplicationBarIconButton_Click"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
@@ -57,9 +111,13 @@
 				</phone:Panorama.Title>
 				<phone:PanoramaItem x:Name="ContentPanoramaItem" CacheMode="{x:Null}">
 					<Grid Margin="10,0">
-						<phone:WebBrowser x:Name="ArticleWebView" IsScriptEnabled="True" Foreground="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LoadCompleted="ArticleWebView_LoadCompleted" Margin="-10,0,10,0"/>
-						<Controls:YouTubeButton x:Name="YoutubeButton" Height="473" Margin="-10,0,0,0" Width="410" Click="YouTubeButton_Click" Foreground="White" Background="White" Visibility="Collapsed"/>
-					</Grid>
+                        <phone:WebBrowser x:Name="ArticleWebView" IsScriptEnabled="True" Foreground="Transparent" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" LoadCompleted="ArticleWebView_LoadCompleted" Margin="-10,0,10,0"/>
+                        <Button x:Name="YoutubeButton" Content="" HorizontalAlignment="Center" Height="186" VerticalAlignment="Center" Width="243" BorderBrush="Black" Foreground="Black" Click="YouTubeButton_Click" BorderThickness="3" Margin="0" Style="{StaticResource YoutubeButtonStyle}" Visibility="Collapsed">
+                        	<Button.Background>
+                        		<ImageBrush ImageSource="youtubeIcon.png"/>
+                        	</Button.Background>
+                        </Button>
+                    </Grid>
 				</phone:PanoramaItem>
 				<phone:PanoramaItem x:Name="TagsPanoramaItem" CacheMode="{x:Null}">
 					<phone:PanoramaItem.Header>
